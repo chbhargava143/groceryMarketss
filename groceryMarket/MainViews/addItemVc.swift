@@ -8,7 +8,7 @@
 
 import UIKit
 import Gallery
-import JGProgressHUD
+import JGProgressHUD // MARK: - For showing Error View.
 import NVActivityIndicatorView
 class addItemVc: UIViewController {
     @IBOutlet weak var titleText_Field:UITextField!
@@ -47,6 +47,10 @@ print(category?.id ?? "")
         }else {
             print("Error all fields are required")
             // show error to the User
+            self.hud.textLabel.text = "All Fields are Required"
+            self.hud.indicatorView = JGProgressHUDErrorIndicatorView()
+            self.hud.show(in: self.view)
+            self.hud.dismiss(afterDelay: 2)
             
         }
        }
