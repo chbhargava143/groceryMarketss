@@ -52,26 +52,26 @@ class categoryVc: UICollectionViewController {
 //        cell.categoryNameLbl.text = cateGoryDict.name
         return cell
     }
-    // MARK :- uicollectionView delegate
+    // MARK:- uicollectionView delegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         performSegue(withIdentifier: "categoryToItemsSegue", sender: categoryArray[indexPath.row])
     }
-    // MARK :- Navigation to Another vc
+    // MARK:- Navigation to Another vc
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "categoryToItemsSegue"{
             let destinationVc = segue.destination as! itemsvc
             destinationVc.category = sender as! Category
         }
     }
-// MARK :- Download Categories
+// MARK:- Download Categories
     private func loadCategoriesFrom(){
-         showActivity()
+       
         downloadcategoriesFromFirebase { (categoriesData) in
             print("We have\(categoriesData.count)")
             self.categoryArray = categoriesData
            
             self.collectionView.reloadData()
-            self.removeActivity()
+           
                }
            
     }

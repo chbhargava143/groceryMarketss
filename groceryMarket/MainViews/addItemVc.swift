@@ -23,7 +23,12 @@ class addItemVc: UIViewController {
     var activityIndicator : NVActivityIndicatorView?
     
     var itemImages : [UIImage?] = []
-    
+    // MARK: - life cycle
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        activityIndicator = NVActivityIndicatorView(frame: CGRect(x: self.view.frame.width / 2 - 30, y: self.view.frame.height / 2 - 30, width: 60, height: 60), type: .ballPulse, color: #colorLiteral(red:0.9999,green:0.4941,blue:0.4734,alpha:1)  , padding: nil)
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +54,31 @@ print(category?.id ?? "")
     @IBAction func didTapDismiss(_ sender: Any) {
         dissmissKeyBoard()
     }
+    // MARK: - Activity Indicator
+    private func showLoadingIndicator(){
+        guard let ActIndicator = activityIndicator else {
+            return
+        }
+        if ActIndicator != nil{
+            self.view.addSubview(ActIndicator)
+            ActIndicator.startAnimating()
+        }
+        
+    }
+    private func hideLoadingIndicator(){
+        guard let ActIndicator = activityIndicator else {
+            return
+        }
+        if ActIndicator != nil{
+                   self.view.addSubview(ActIndicator)
+                   ActIndicator.stopAnimating()
+               }
+        ActIndicator.removeFromSuperview()
+        ActIndicator.stopAnimating()
+        
+    }
     
-    
-    // MARK : -
+    // MARK: -
     private func dissmissKeyBoard(){
         self.view.endEditing(true)
     }
@@ -62,8 +89,9 @@ print(category?.id ?? "")
     private func popTheView(){
         self.navigationController?.popViewController(animated: true)
     }
-    // MARK : - save item
+    // MARK: - save item
     private func saveToFirebase() {
+        showLoadingIndicator()
         let item = Item()
         item.id = UUID().uuidString
         item.name = titleText_Field.text!
@@ -75,13 +103,14 @@ print(category?.id ?? "")
                 item.imageLinks = imageLinkArray
                 saveItemToFirestore(item)
                 self.popTheView()
+                self.hideLoadingIndicator()
             }
         } else {
             saveItemToFirestore(item)
             popTheView()
         }
     }
-    // MARk :- gallery
+    // MARk: - gallery
     private func showImageGallery(){
         self.gallery = GalleryController()
         self.gallery.delegate = self
