@@ -51,6 +51,33 @@ func saveImgaeInFirebase(imageData:Data,filename:String,completion : @escaping (
                 return}
             completion(downloadUrl.absoluteString)
         }
-       
+        
     })
+}
+func downloadImages(_ imageURl:[String],_ completion : @escaping (_ images:[UIImage?] )->Void){
+    var imageArray : [UIImage] = []
+    var downloadCounter = 0
+    for link in imageURl {
+        let url = NSURL(string: link)
+        let downloadQue = DispatchQueue(label: "imageDownloadQue")
+        downloadQue.async {
+            downloadCounter += 1
+            guard let url = url else {return }
+            guard let data = NSData(contentsOf: url as URL) else {return}
+            if data != nil{
+                imageArray.append(UIImage(data: data as Data)!)
+                
+                if downloadCounter == imageArray.count{
+                    DispatchQueue.main.async {
+                        
+                        completion(imageArray)
+                    }
+                }
+            } else {
+                print("Couldn't Download image")
+                completion(imageArray)
+            }
+        }
+    }
+    
 }
