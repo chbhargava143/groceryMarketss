@@ -42,12 +42,19 @@ class itemsvc: UITableViewController {
         cell.generateCell(itemsArray[indexPath.row])
         return cell
     }
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     
+        let itemVcS = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(identifier: "itemViewController") as! itemViewController
+        itemVcS.items = itemsArray[indexPath.row]
+        
+        self.navigationController?.pushViewController(itemVcS, animated: true)
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ItemToAddItemSegue"{
+        if segue.identifier == "ItemToAddItemSegue" {
             let destinationVc = segue.destination as! addItemVc
             destinationVc.category = category!
         }
+       
     }
 // MARK: - Load items
     
